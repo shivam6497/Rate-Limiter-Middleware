@@ -1,7 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
 import redis from "../redis/client.js";
 
-const WISHLIST: string[] = [];
+const WISHLIST: string[] = ["127.0.0.1", "::1"];
 
 interface RateLimitOptions {
   maxRequests: number;
