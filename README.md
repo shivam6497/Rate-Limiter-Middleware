@@ -73,4 +73,4 @@ src/
 
 - Redis is currently configured directly in [`src/redis/client.ts`](src/redis/client.ts) to use `127.0.0.1:6379`.
 - The middleware normalizes the localhost IPv6 loopback address (`::1`) to `127.0.0.1`.
-- Requests from whitelisted IPs are skipped by the rate limiter, but the whitelist is currently empty.
+- Requests from whitelisted IPs are skipped by the rate limiter.
