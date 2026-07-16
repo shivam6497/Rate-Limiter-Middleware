@@ -1,13 +1,12 @@
 # Rate Limiter
 
-A small Express + TypeScript API that demonstrates Redis-backed rate limiting.
+A small Express + TypeScript API that demonstrates Redis-backed sliding window log rate limiting.
 
 ## What it does
 
-- Uses Redis to track request counts per IP address.
-- Applies a global rate limiter to all routes.
-- Using Sliding Window Log algorithm to allow bursts of requests while enforcing a limit over time.
-- Applies a stricter limiter to `/api/data`.
+- Uses Redis sorted sets to store request timestamps per IP address.
+- Applies a global sliding window log limiter to all routes.
+- Applies a stricter sliding window log limiter to `/api/data`.
 - Returns `429 Too Many Requests` when a client exceeds the configured limit.
 
 ## Tech Stack
@@ -47,8 +46,12 @@ The server starts on `http://localhost:3000`.
 
 The current limits are defined in [`src/index.ts`](src/index.ts):
 
-- Global limiter: 10 requests per 60 seconds
-- Strict limiter: 3 requests per 60 seconds
+- Global sliding window log limiter: 10 requests per 60 seconds
+- Strict sliding window log limiter: 3 requests per 60 seconds
+
+## How It Works
+
+Each request is recorded in Redis with a timestamp. Before allowing a request, the middleware removes timestamps that are older than the configured window, counts the remaining entries, and decides whether the request should pass. This gives a true sliding window view instead of resetting all counters at a fixed interval.
 
 ## Response Headers
 
